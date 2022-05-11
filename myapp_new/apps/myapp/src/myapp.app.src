@@ -1,0 +1,28 @@
+{application, myapp,
+  [{description, "An OTP application"},
+    {vsn, "0.1.0"},
+    {registered, []},
+    {mod, {myapp_app, []}},
+%%  添加完deps目录后，记得将新加的application加入到你的主app的.app.src文件中，这样就不用手动额外进行application调用了
+    {
+      applications,
+      [
+        kernel,
+        stdlib,
+        cowboy,
+        jsx,
+        poolboy,
+        mysql,
+        mysql_poolboy
+        %eredis_pool
+
+      ]},
+    {env, [
+
+
+
+    ]},
+    {modules, []},
+    {licenses, ["Apache 2.0"]},
+    {links, []}
+  ]}.

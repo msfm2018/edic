@@ -1,0 +1,7 @@
+-name 'myapp@127.0.0.1'
+
+-setcookie 'myapp_cookie'
+
++K true
++A30
++P 10240000
