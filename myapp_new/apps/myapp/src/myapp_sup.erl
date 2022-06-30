@@ -4,8 +4,6 @@
 %%%-------------------------------------------------------------------
 
 -module(myapp_sup).
--include_lib("./include/common.hrl").
--include("ejabberd_logger.hrl").
 -behaviour(supervisor).
 
 %% API
@@ -29,8 +27,7 @@ start_link() ->
 
 
 init([]) ->
-  log_init(),
-  lib_id:init(),
+
 %% sys.config  取得配置数据
   {ok, Pools} = application:get_env(myapp, mysql_poolboy),
 
@@ -45,10 +42,7 @@ init([]) ->
     ]
   }}.
 
-log_init() ->
-  ejabberd_loglevel:set(5),
-  error_logger:add_report_handler(ejabberd_logger_h, "logfile.log"),
-  ?DEBUG("Hello ~p", ["World!"]).
+
 %%====================================================================
 %% Internal functions
 %%====================================================================

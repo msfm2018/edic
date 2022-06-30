@@ -1,7 +1,7 @@
 class GroupCTable {
   int? code;
   String? msg;
-  List<Data>? data;
+  List<DataG>? data;
 
   GroupCTable({this.code, this.msg, this.data});
 
@@ -9,9 +9,9 @@ class GroupCTable {
     code = json['code'];
     msg = json['msg'];
     if (json['data'] != null) {
-      data = <Data>[];
+      data = <DataG>[];
       json['data'].forEach((v) {
-        data!.add(Data.fromJson(v));
+        data!.add(DataG.fromJson(v));
       });
     }
   }
@@ -27,15 +27,15 @@ class GroupCTable {
   }
 }
 
-class Data {
+class DataG {
   int? id;
   String? groupname;
   String? groupid;
   String? finish;
 
-  Data({this.id, this.groupname, this.groupid, this.finish});
+  DataG({this.id, this.groupname, this.groupid, this.finish});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  DataG.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     groupname = json['groupname'];
     groupid = json['groupid'];

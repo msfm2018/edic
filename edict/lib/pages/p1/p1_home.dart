@@ -21,17 +21,11 @@ class P1Home extends StatelessWidget {
             leading: IconButton(
               icon: const Icon(Icons.home),
               onPressed: () {
-                controller.pageIndex == 0 ? 0 : controller.pageIndex--;
+                controller.pageIndex <= 0 ? 0 : controller.pageIndex--;
+                if (controller.pageIndex < 0) controller.pageIndex = 0;
+                print(controller.pageIndex.toString());
               },
             ),
-
-            //  GestureDetector(
-
-            //   onTap: () {
-            //     controller.pageIndex == 0 ? 0 : controller.pageIndex--;
-            //   },
-            //   child: const Icon(Icons.home),
-            // ),
           ),
           body: Obx(() => IndexedStack(
                 children: const [W1(), W2(), W3()],

@@ -8377,3 +8377,42 @@ D(<0.243.0>:myapp_sup:51) : Hello "World!"
 
 =INFO REPORT==== 2022-05-11 16:38:17 ===
 D(<0.243.0>:myapp_sup:51) : Hello "World!"
+
+=INFO REPORT==== 2022-06-21 10:13:10 ===
+D(<0.1215.0>:myapp_sup:51) : Hello "World!"
+
+=INFO REPORT==== 2022-06-21 21:14:11 ===
+D(<0.243.0>:myapp_sup:51) : Hello "World!"
+
+=INFO REPORT==== 2022-06-22 12:52:11 ===
+D(<0.243.0>:myapp_sup:51) : Hello "World!"
+
+=INFO REPORT==== 2022-06-22 23:05:32 ===
+D(<0.251.0>:myapp_sup:51) : Hello "World!"
+
+=ERROR REPORT==== 2022-06-22 23:17:01 ===
+Ranch listener http, connection process <0.292.0>, stream 1 had its request process <0.293.0> exit with reason undef and stacktrace [{http_uri,uri_string,[<<"%7B%22table_id%22:%22groupTableC%22,%22dy%22:%221%22%7D">>],[]},{api_group,qrcode,2,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/apps/myapp/src/api_group.erl"},{line,24}]},{cowboy_rest,call,3,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/_build/default/lib/cowboy/src/cowboy_rest.erl"},{line,1583}]},{cowboy_rest,set_resp_body,2,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/_build/default/lib/cowboy/src/cowboy_rest.erl"},{line,1472}]},{cowboy_rest,upgrade,4,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/_build/default/lib/cowboy/src/cowboy_rest.erl"},{line,284}]},{cowboy_stream_h,execute,3,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/_build/default/lib/cowboy/src/cowboy_stream_h.erl"},{line,306}]},{cowboy_stream_h,request_process,3,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/_build/default/lib/cowboy/src/cowboy_stream_h.erl"},{line,295}]},{proc_lib,init_p_do_apply,3,[{file,"proc_lib.erl"},{line,226}]}]
+
+=INFO REPORT==== 2022-06-22 23:20:53 ===
+D(<0.251.0>:myapp_sup:51) : Hello "World!"
+
+=ERROR REPORT==== 2022-06-22 23:21:45 ===
+Ranch listener http, connection process <0.287.0>, stream 1 had its request process <0.288.0> exit with reason undef and stacktrace [{http_uri,uri_string,[<<"%7B%22table_id%22:%22groupTableC%22,%22dy%22:%221%22%7D">>],[]},{api_group,qrcode,2,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/apps/myapp/src/api_group.erl"},{line,24}]},{cowboy_rest,call,3,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/_build/default/lib/cowboy/src/cowboy_rest.erl"},{line,1583}]},{cowboy_rest,set_resp_body,2,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/_build/default/lib/cowboy/src/cowboy_rest.erl"},{line,1472}]},{cowboy_rest,upgrade,4,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/_build/default/lib/cowboy/src/cowboy_rest.erl"},{line,284}]},{cowboy_stream_h,execute,3,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/_build/default/lib/cowboy/src/cowboy_stream_h.erl"},{line,306}]},{cowboy_stream_h,request_process,3,[{file,"c:/Users/Administrator/Desktop/edic/edic/myapp_new/_build/default/lib/cowboy/src/cowboy_stream_h.erl"},{line,295}]},{proc_lib,init_p_do_apply,3,[{file,"proc_lib.erl"},{line,226}]}]
+
+=INFO REPORT==== 2022-06-22 23:24:14 ===
+D(<0.251.0>:myapp_sup:51) : Hello "World!"
+
+=INFO REPORT==== 2022-06-22 23:26:26 ===
+D(<0.251.0>:myapp_sup:51) : Hello "World!"
+
+=INFO REPORT==== 2022-06-22 23:27:36 ===
+D(<0.251.0>:myapp_sup:51) : Hello "World!"
+
+=INFO REPORT==== 2022-06-22 23:31:09 ===
+D(<0.251.0>:myapp_sup:51) : Hello "World!"
+
+=INFO REPORT==== 2022-06-23 09:29:43 ===
+D(<0.243.0>:myapp_sup:51) : Hello "World!"
+
+=INFO REPORT==== 2022-06-23 09:38:45 ===
+D(<0.251.0>:myapp_sup:51) : Hello "World!"

@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'global_controller.dart';
 import 'p1/p1_home.dart';
 
-// var _currentIndex = 0.obs;
 final controller = Get.find<GlobalController>();
 
 class HomeView extends StatelessWidget {
@@ -19,18 +18,6 @@ class HomeView extends StatelessWidget {
           children: widgets,
         ),
       ),
-
-      // PageView(
-      //   controller: _pageController,
-      //   onPageChanged: (index) {
-      //     setState(() {
-      //       _currentIndex = index;
-      //     });
-      //   },
-      //   children: widgets,
-      //   physics: NeverScrollableScrollPhysics(), // 禁止滑动
-      // ),
-
       bottomNavigationBar: Obx(
         () => bottomTabs(),
       ),
@@ -58,7 +45,6 @@ class HomeView extends StatelessWidget {
           .toList(),
       currentIndex: controller.pageCurrentIndex.value,
       onTap: (index) {
-        // _pageController.jumpToPage(index);
         controller.pageCurrentIndex.value = index;
       },
 
@@ -72,12 +58,7 @@ class HomeView extends StatelessWidget {
 }
 
 // ===========================================
-List<Widget> widgets = [
-  const P1Home(),
-  CatalogPageInfo(),
-  CatalogPageInfo(),
-  CatalogPageInfo()
-];
+List<Widget> widgets = [const P1Home(), CatalogPageInfo(), CatalogPageInfo(), CatalogPageInfo()];
 List tabData = [
   _TabBarItem('词条', Icons.home_max_outlined, Icons.home),
   _TabBarItem('生词本', Icons.book, Icons.book_online_outlined),

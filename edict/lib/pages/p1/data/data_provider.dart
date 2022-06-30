@@ -1,5 +1,5 @@
-import 'dart:convert' as convert;
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
 import '../../../shared/net_provider.dart';
@@ -18,33 +18,54 @@ class DataProvider {
     return _h ??= DataProvider._();
   }
 
-  _fetchItemData(page) async {
-    var jsonData = {"table_id": "groupTableC", "dy": '$page'};
-    String str = convert.jsonEncode(jsonData);
-    var response = await NetProvider().dio!.get('/api_group?' + str);
-    var vv = GroupCTable.fromJson(response.data);
-    return vv.data;
+  _fetchGroupData() async {
+    var jsonData = {"table_id": "items"};
+    String str = jsonEncode(jsonData);
+    try {
+      var response = await NetProvider().dio!.get('/api_items?' + str);
+      var vv = GroupCTable.fromJson(response.data);
+      return vv.data;
+    } catch (e) {
+      return "";
+    }
   }
 
-  Future<dynamic> onItemsRefresh() {
-    controller.datas.clear();
-    return _fetchItemData(1).then((dta) {
-      controller.datas.addAll(dta);
+  Future<dynamic> onGroupRefresh() {
+    controller.datasG.clear();
+    return _fetchGroupData().then((dta) {
+      controller.datasG.addAll(dta);
     });
   }
 
-  _fetchWordData(page) async {
-    var jsonData = {"table_id": "cg1", "dy": '$page'};
-    String str = convert.jsonEncode(jsonData);
-    var response = await NetProvider().dio!.get('/api_word?' + str);
+  _fetchWordData(startId, max) async {
+    var jsonData = {"table_id": "item1", "start_id": '$startId', "max": '$max'};
+    String str = jsonEncode(jsonData);
+    var response = await NetProvider().dio!.get('/api_words?' + str);
     var vv = WordCTable.fromJson(response.data);
     return vv.data;
   }
 
-  Future<dynamic> onWordsRefresh2() {
-    controller.datasWord.clear();
-    return _fetchWordData(1).then((dta) {
+  ///上拉请求数据
+  Future<dynamic> onRefreshUp(int startId, int max) {
+    if (startId == 0) {
+      controller.datasWord.clear();
+    }
+    return _fetchWordData(startId, max).then((dta) {
       controller.datasWord.addAll(dta);
     });
+  }
+
+  Future<http.Response> sendPost(String id) async {
+    var post = {"table_id": "item1", "id": id};
+
+    var body = utf8.encode(json.encode(post));
+
+    var addPost = await http.post(Uri.http(ip, 'api_delword'),
+        headers: {"content-type": "application/json"}, body: body);
+    return addPost;
+  }
+
+  Future<void> onDelWord(String id) {
+    return sendPost(id);
   }
 }

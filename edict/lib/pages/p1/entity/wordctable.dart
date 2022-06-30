@@ -17,7 +17,7 @@ class WordCTable {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = {};
     data['code'] = code;
     data['msg'] = msg;
     if (this.data != null) {
@@ -30,21 +30,29 @@ class WordCTable {
 class DataWord {
   int? id;
   String? wordname;
+  String? tone;
   String? wordtrans;
+  String? video;
 
-  DataWord({this.id, this.wordname, this.wordtrans});
+  DataWord({this.id, this.wordname, this.tone, this.wordtrans, this.video});
 
   DataWord.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     wordname = json['wordname'];
+    tone = json['tone'];
     wordtrans = json['wordtrans'];
+    video = json['video'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
+    final Map<String, dynamic> data = {};
     data['id'] = id;
     data['wordname'] = wordname;
+
+    ///音标
+    data['tone'] = tone;
     data['wordtrans'] = wordtrans;
+    data['video'] = video;
     return data;
   }
 }

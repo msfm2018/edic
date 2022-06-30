@@ -1,5 +1,5 @@
 %% coding: utf-8
--module(api_word).
+-module(api_words).
 -compile(export_all).
 init(Req, Opts) ->
   {cowboy_rest, Req, Opts}.
@@ -17,25 +17,19 @@ content_types_provided(Req, State) ->
 qrcode(Req, State) ->
 %%  #{table_id := TableId, dy := Dy} = cowboy_req:match_qs([table_id, dy], Req),
 %%%%  #{lang := Lang} = cowboy_req:match_qs([{lang, [], <<"en-US">>}], Req),
-%%io:format("~p  ~p~n",[TableId,Dy]),
   P0 = cowboy_req:qs(Req),
-%%  io:format("~p~n", [P0]),
   Http_decode = http_uri:decode(P0),
-%%  io:format("Http_decode::::~p~n", [Http_decode]),
   try
     Map = jsx:decode(Http_decode, [return_maps]),
-%%    io:format("~p~n", [Map]),
 
     TableId = maps:get(<<"table_id">>, Map),
-    Dy = maps:get(<<"dy">>, Map),
-%%    io:format("~p~n", [{TableId, Dy}]),
+    StartId = maps:get(<<"start_id">>, Map),
+    Max = maps:get(<<"max">>, Map),
 
-    % Sql3 = lists:flatten(io_lib:format("SELECT *  from ~s where dy='~s' ", [TableId, Dy])),
-    Sql3 = lists:flatten(io_lib:format("SELECT *  from ~s ", [TableId])),
-%%    io:format("~p~n", [Sql3]),
+     Sql3 = lists:flatten(io_lib:format("select *  from ~s  order by id desc LIMIT ~p,~p", [TableId,binary_to_integer( StartId),binary_to_integer(Max)])),
+    io:format("~p~n", [Sql3]),
     try
       {ok, FieldList, DataList} = mysql_poolboy:query(pool1, Sql3),
-%%      io:format(":::::::::::~p~n", [{FieldList, DataList}]),
       TToken = case DataList of
                  [] -> jsx:encode([{<<"code">>, -1},
                    {<<"msg">>, <<"没有数据"/utf8>>},
@@ -56,7 +50,6 @@ qrcode(Req, State) ->
       Req2 = cowboy_req:set_resp_header(<<"access-control-allow-methods">>, <<"POST">>, Req1),
 
       Req3 = cowboy_req:set_resp_header(<<"access-control-allow-headers">>, <<"content-type">>, Req2),
-
       {Vv, Req3, State}
     catch
       _:_ ->

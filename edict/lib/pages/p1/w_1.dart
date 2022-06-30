@@ -18,7 +18,7 @@ class W1 extends StatelessWidget {
           const Spacer(flex: 5),
           TextButton(
               onPressed: () async {
-                await DataProvider().onItemsRefresh().then(
+                await DataProvider().onGroupRefresh().then(
                     (value) => controller.pageIndex = controller.pageIndex + 1);
               },
               child: const Text(
@@ -28,17 +28,16 @@ class W1 extends StatelessWidget {
                     fontSize: 24,
                     fontFeatures: <FontFeature>[FontFeature.oldstyleFigures()]),
               )),
-          const Divider(),
-          TextButton(
-              onPressed: () async {
-                await DataProvider().onItemsRefresh().then(
-                    (value) => controller.pageIndex = controller.pageIndex + 1);
-              },
-              child: const Text('化学英语',
-                  style: TextStyle(
-                    fontFamily: 'Cardo',
-                    fontSize: 24,
-                  ))),
+          // const Divider(),
+          // TextButton(
+          //     onPressed: () async {
+          //     //  await DataProvider().onGroupRefresh().then((value) => controller.pageIndex = controller.pageIndex + 1);
+          //     },
+          //     child: const Text('化学英语',
+          //         style: TextStyle(
+          //           fontFamily: 'Cardo',
+          //           fontSize: 24,
+          //         ))),
           const Spacer(flex: 5),
         ],
       ),

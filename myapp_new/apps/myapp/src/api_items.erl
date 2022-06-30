@@ -1,5 +1,5 @@
 %% coding: utf-8
--module(api_group).
+-module(api_items).
 -compile(export_all).
 init(Req, Opts) ->
   {cowboy_rest, Req, Opts}.
@@ -15,26 +15,21 @@ content_types_provided(Req, State) ->
   ], Req, State}.
 
 %%http://127.0.0.1:9011/api_wendu?table_id=1&dy=0
+%% select * from cg1 GROUP BY id desc LIMIT 5,4
 qrcode(Req, State) ->
 
   P0 = cowboy_req:qs(Req),
-    io:format("P0::::~p~n", [P0]),
-  Http_decode = http_uri:decode(P0),
-  io:format("Http_decode::::~p~n", [Http_decode]),
+  Uri_string = http_uri:decode(P0),
   try
-    Map = jsx:decode(Http_decode, [return_maps]),
-    io:format("~p~n", [Map]),
+    Map = jsx:decode(Uri_string, [return_maps]),
 
     TableId = maps:get(<<"table_id">>, Map),
-    Dy = maps:get(<<"dy">>, Map),
-    io:format("~p~n", [{TableId, Dy}]),
 
-    % Sql3 = lists:flatten(io_lib:format("SELECT *  from ~s where dy='~s' ", [TableId, Dy])),
-    Sql3 = lists:flatten(io_lib:format("SELECT *  from ~s  ", [TableId])),
-%%    io:format("~p~n", [Sql3]),
+
+    Sql3 = lists:flatten(io_lib:format("select *  from ~s ", [TableId])),
+    io:format("~p~n",[Sql3]),
     try
       {ok, FieldList, DataList} = mysql_poolboy:query(pool1, Sql3),
-%%      io:format(":::::::::::~p~n", [{FieldList, DataList}]),
       TToken = case DataList of
                  [] -> jsx:encode([{<<"code">>, -1},
                    {<<"msg">>, <<"没有数据"/utf8>>},
@@ -55,7 +50,6 @@ qrcode(Req, State) ->
       Req2 = cowboy_req:set_resp_header(<<"access-control-allow-methods">>, <<"POST">>, Req1),
 
       Req3 = cowboy_req:set_resp_header(<<"access-control-allow-headers">>, <<"content-type">>, Req2),
-io:format("~s~n",[Vv]),
       {Vv, Req3, State}
     catch
       _:_ ->
@@ -75,7 +69,6 @@ io:format("~s~n",[Vv]),
 
   catch
     _:_ ->
-%%      io:format("errpr----------------"),
       Vv3 = jsx:encode([
         {<<"code">>, 1}, {<<"msg">>, <<"参数错误"/utf8>>},
         {<<"data">>, ""}

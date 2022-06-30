@@ -1,14 +1,18 @@
+import 'dart:async';
 import 'dart:ui';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:edict/pages/p1/entity/wordctable.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-
+// import 'package:flutter_slidable/flutter_slidable.dart';
 import '../global_controller.dart';
+import 'data/data_provider.dart';
 
 int page = 1;
-final controller = Get.find<GlobalController>();
 
+final controller = Get.find<GlobalController>();
+ScrollController _scrollController = ScrollController();
 void setSource(Source source) async {
   await player.play(source);
 }
@@ -20,67 +24,251 @@ final TextStyle titleStyle = TextStyle(
 );
 AudioPlayer player = AudioPlayer();
 
-class W3 extends StatelessWidget {
+class W3 extends StatefulWidget {
   const W3({Key? key}) : super(key: key);
 
   @override
+  State<W3> createState() => _W3State();
+}
+
+class _W3State extends State<W3> {
+  String whatHappened = '';
+  Future<void> _loadMore() async {
+    Future.delayed(const Duration(milliseconds: 1000), () async {
+      try {
+        await DataProvider()
+            .onRefreshUp(controller.startId, controller.max)
+            .then((value) {
+          controller.ishide.value = true;
+          controller.startId = controller.startId + controller.max;
+        });
+      } catch (e) {
+        controller.ishide.value = true;
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    _scrollController.addListener(() async {
+      /// _scrollController.position.pixels 是当前像素点位置
+      /// _scrollController.position.maxScrollExtent 当前列表最大可滚动位置   上拉加载
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        controller.ishide.value = false;
+        await _loadMore();
+      }
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // print(Get.arguments);
-    // print(Get.parameters['name']);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-            child: Obx(
-          () => controller.datasWord.isEmpty
-              ? const Text('无数据')
-              : ListView.builder(
-                  itemCount: controller.datasWord.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Row(
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.play_circle),
-                            iconSize: 20,
-                            onPressed: () => setSource(UrlSource(
-                                'https://sp1.baidu.com/-rM1hT4a2gU2pMbgoY3K/gettts?lan=en&text=${controller.datasWord[index].wordname!}&spd=2&source=alading')),
-                          ),
-                          TextButton(
-                              onPressed: () {},
-                              child:
-                                  Text(controller.datasWord[index].wordname!)),
-                          Text('[音标]'),
-                          SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                              child: MediaQuery.removePadding(
-                            removeTop: true,
-                            context: context,
-                            child: Text(
-                              controller.datasWord[index].wordtrans!,
-                              textAlign: TextAlign.left, // 对齐方式
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 3,
-                            ),
-                          )
-                              // child: Text(
-                              //   controller.datasWord[index].wordtrans!,
-                              //   textAlign: TextAlign.left, // 对齐方式
-                              //   overflow: TextOverflow.ellipsis,
-                              //   maxLines: 3,
-                              // ), // 对齐方式),
+            child: RefreshIndicator(
+                onRefresh: () async {
+                  ///下拉加载
+                  //  controller.ishide.value = false;
+                  controller.startId = 0;
+                  await _loadMore();
+                  return Future.value();
+                },
+                child: Obx(
+                  () => controller.datasWord.isEmpty
+                      ? const Text('无数据')
+                      : ListView.builder(
+                          controller: _scrollController,
+                          itemCount: controller.datasWord.length,
+                          itemBuilder: (context, index) {
+                            final item = controller.datasWord[index];
+                            // background 是向右滑动展示的，secondaryBackground是向左滑动展示的。
+                            return Dismissible(
+                              key: Key(item.wordname!),
+                              onDismissed: (direction) async {
+                                var _snackStr = '';
+                                if (direction == DismissDirection.endToStart) {
+                                  // 从右向左  也就是删除
+                                  _snackStr = '删除了${item.wordname}';
+                                } else if (direction ==
+                                    DismissDirection.startToEnd) {
+                                  _snackStr = '收藏了${item.wordname}';
+                                }
+
+                                // 展示 SnackBar
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(SnackBar(
+                                  content: Text(_snackStr),
+                                ));
+
+                                controller.datasWord.removeAt(index);
+                                await DataProvider().onDelWord(item.wordname!);
+                              },
+                              background: Container(
+                                color: Colors.red,
+                                // 这里使用 ListTile 因为可以快速设置左右两端的Icon
+                                child: Title(
+                                    color: Colors.yellowAccent,
+                                    child: Row(
+                                      children: const [
+                                        Icon(
+                                          Icons.save,
+                                          color: Colors.white,
+                                        ),
+                                      ],
+                                    )),
                               ),
-                        ],
-                      ),
-                      subtitle: const Divider(),
-                      // trailing: Text(controller.datasWord[index].wordtrans!),
-                    );
-                  },
-                ),
-        )),
+                              //向左滑动
+                              secondaryBackground: Container(
+                                color: Colors.redAccent,
+                                // 这里使用 ListTile 因为可以快速设置左右两端的Icon
+                                child: const ListTile(
+                                  trailing: Icon(
+                                    Icons.delete,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              child: ListTile(
+                                title: Row(
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.play_circle),
+                                      iconSize: 20,
+                                      onPressed: () => setSource(UrlSource(
+                                          'https://sp1.baidu.com/-rM1hT4a2gU2pMbgoY3K/gettts?lan=en&text=${controller.datasWord[index].wordname!}&spd=2&source=alading')),
+                                    ),
+                                    TextButton(
+                                        onPressed: () {},
+                                        child: Text(controller
+                                            .datasWord[index].wordname!)),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                        child: MediaQuery.removePadding(
+                                      removeTop: true,
+                                      context: context,
+                                      child: Text(
+                                        controller.datasWord[index].wordtrans!,
+                                        textAlign: TextAlign.left, // 对齐方式
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 3,
+                                      ),
+                                    )),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                        controller.datasWord[index].tone ?? ""),
+                                  ],
+                                ),
+                                subtitle: const Divider(),
+                                // trailing: Text(controller.datasWord[index].wordtrans!),
+                              ),
+
+                              confirmDismiss:
+                                  (DismissDirection dismissDirection) async {
+                                switch (dismissDirection) {
+                                  case DismissDirection.endToStart:
+                                    whatHappened = '删除';
+                                    return await _showConfirmationDialog(
+                                            context, '删除', item) ==
+                                        true;
+                                  case DismissDirection.startToEnd:
+                                    whatHappened = '收藏';
+                                    return await _showConfirmationDialog(
+                                            context, '收藏', item) ==
+                                        true;
+                                  case DismissDirection.horizontal:
+                                  case DismissDirection.vertical:
+                                  case DismissDirection.up:
+                                  case DismissDirection.down:
+                                    assert(false);
+                                    break;
+                                  case DismissDirection.none:
+                                    break;
+                                }
+                                return false;
+                              },
+                            );
+                          },
+                        ),
+                ))),
+        Obx(
+          () {
+            return Offstage(
+              offstage: controller.ishide.value,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
+        ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+}
+
+Future<bool?> _showConfirmationDialog(
+    BuildContext context, String action, DataWord dw) async {
+  if (action == '删除') {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(' $action?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('是'),
+              onPressed: () {
+                Navigator.pop(context, true); // showDialog() returns true
+              },
+            ),
+            TextButton(
+              child: const Text('否'),
+              onPressed: () {
+                Navigator.pop(context, false); // showDialog() returns false
+              },
+            ),
+          ],
+        );
+      },
+    );
+  } else if (action == '收藏') {
+    return showDialog<bool>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('$action '),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('是'),
+              onPressed: () {
+                Navigator.pop(context, false); //   showDialog() returns true
+              },
+            ),
+            TextButton(
+              child: const Text('否'),
+              onPressed: () {
+                Navigator.pop(context, false); // showDialog() returns false
+              },
+            ),
+          ],
+        );
+      },
+    );
+  } else {
+    return null;
   }
 }

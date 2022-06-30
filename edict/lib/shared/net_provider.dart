@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
 
+const ip = '192.168.3.32:9011';
+
 class NetProvider {
   var options = BaseOptions(
-    baseUrl: 'http://127.0.0.1:9011',
+    baseUrl: 'http://$ip',
     connectTimeout: 5000,
     receiveTimeout: 3000,
   );

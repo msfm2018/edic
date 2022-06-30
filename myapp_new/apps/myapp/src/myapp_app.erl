@@ -18,9 +18,9 @@ start(_StartType, _StartArgs) ->
   Dispatch = cowboy_router:compile([
     {'_', [
 
-      {"/api_group", api_group, []},                                  %%组
-      {"/api_word", api_word, []},                                  %%取得单词
-      {"/api_qrcode", api_qrcode, []}                                  %%二维码
+      {"/api_items", api_items, []},                                  %%组
+      {"/api_words", api_words, []} ,                                 %%取得单词
+      {"/api_delword", api_delword, []}                                  %%删除单词
 
 
     ]}
