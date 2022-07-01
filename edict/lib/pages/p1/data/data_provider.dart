@@ -1,4 +1,7 @@
 import 'dart:convert';
+
+import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 
@@ -55,7 +58,7 @@ class DataProvider {
     });
   }
 
-  Future<http.Response> sendPost(String id) async {
+  Future<http.Response> sendPost2(String id) async {
     var post = {"table_id": "item1", "id": id};
 
     var body = utf8.encode(json.encode(post));
@@ -63,6 +66,23 @@ class DataProvider {
     var addPost = await http.post(Uri.http(ip, 'api_delword'),
         headers: {"content-type": "application/json"}, body: body);
     return addPost;
+  }
+
+  sendPost(String id) async {
+    var post = {"table_id": "item1", "id": id};
+
+    String body = jsonEncode(post);
+
+    // NetProvider().dio!.options.contentType = Headers.formUrlEncodedContentType;
+    var response = await NetProvider().dio!.post(
+          '/api_delword',
+          data: body,
+          options: Options(
+            contentType: Headers.jsonContentType,
+          ),
+        );
+    var resCall = response.data;
+    print(resCall);
   }
 
   Future<void> onDelWord(String id) {

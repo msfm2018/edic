@@ -58,7 +58,12 @@ class HomeView extends StatelessWidget {
 }
 
 // ===========================================
-List<Widget> widgets = [const P1Home(), CatalogPageInfo(), CatalogPageInfo(), CatalogPageInfo()];
+List<Widget> widgets = [
+  const P1Home(),
+  CatalogPageInfo(),
+  CatalogPageInfo(),
+  CatalogPageInfo()
+];
 List tabData = [
   _TabBarItem('词条', Icons.home_max_outlined, Icons.home),
   _TabBarItem('生词本', Icons.book, Icons.book_online_outlined),
