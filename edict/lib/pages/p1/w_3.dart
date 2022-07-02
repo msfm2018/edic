@@ -5,6 +5,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:edict/pages/p1/entity/wordctable.dart';
 
 import 'package:get/get.dart';
+import 'package:edict/package/toast/lib/toast.dart';
 import '../global_controller.dart';
 import 'data/data_provider.dart';
 
@@ -95,11 +96,14 @@ class _W3State extends State<W3> {
                                   _snackStr = '收藏了${item.wordname}';
                                 }
 
-                                // 展示 SnackBar
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text(_snackStr),
-                                ));
+                                // // 展示 SnackBar
+                                // ScaffoldMessenger.of(context)
+                                //     .showSnackBar(SnackBar(
+                                //   content: Text(_snackStr),
+                                // ));
+
+                                showToast(_snackStr,
+                                    duration: 2, gravity: Toast.bottom);
 
                                 controller.datasWord.removeAt(index);
                                 await DataProvider().onDelWord(item.wordname!);
@@ -198,6 +202,10 @@ class _W3State extends State<W3> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  void showToast(String msg, {int? duration, int? gravity}) {
+    Toast.show(msg, duration: duration, gravity: gravity);
   }
 }
 

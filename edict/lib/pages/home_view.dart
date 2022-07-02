@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:edict/package/toast/lib/toast.dart';
 
 import 'global_controller.dart';
 import 'p1/p1_home.dart';
@@ -11,6 +12,7 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
     return Scaffold(
       body: Obx(
         () => IndexedStack(

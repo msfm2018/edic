@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-const ip = '192.168.3.32:9011';
+const ip = '192.168.1.104:9011';
 
 class NetProvider {
   var options = BaseOptions(
